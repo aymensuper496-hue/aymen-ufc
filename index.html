@@ -1,0 +1,729 @@
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطاقة دخول ملاكم محترف - أيمن حسينية</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <!-- QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                        },
+                        dark metallic: '#0d1117'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0b0f17;
+            color: #f3f4f6;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(234, 179, 8, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 100% 100%, rgba(30, 41, 59, 0.5) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+
+        /* Gold metallic gradient text */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #FFE259 0%, #FFA751 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border-gradient {
+            border-image: linear-gradient(135deg, #ffd700, #b8860b, #ffd700) 1;
+        }
+
+        /* Hologram Plastic Badge Effect */
+        .badge-card {
+            background: linear-gradient(145deg, #ffffff, #f1f5f9);
+            color: #0f172a;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(234, 179, 8, 0.2);
+        }
+
+        .badge-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transform: skewX(-25deg);
+            transition: 0.8s;
+            pointer-events: none;
+        }
+
+        .badge-card:hover::before {
+            left: 150%;
+        }
+
+        /* Holographic Seal */
+        .holo-seal {
+            background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(184,134,11,0.6) 50%, rgba(0,0,0,0) 70%);
+            animation: pulse-glow 3s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% { opacity: 0.6; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1.02); }
+        }
+
+        /* Print Media Stylesing */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-pass, #printable-pass * {
+                visibility: visible;
+            }
+            #printable-pass {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: none !important;
+                border: 2px solid #333 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900/90 border-b border-amber-500/30 backdrop-blur-md sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand / Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid fa-mitten"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg text-white tracking-wide">منظومة تراخيص الملاكمة المحترفة</h1>
+                    <p class="text-xs text-amber-400/80 font-medium">الاتحاد العالمي للملاكمة (WBC Accredited)</p>
+                </div>
+            </div>
+
+            <!-- Status Indicator -->
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 text-xs font-bold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    ترخيص ساري المفعول
+                </div>
+                <button onclick="toggleFullscreen()" class="p-2 text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-expand text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Tab Buttons Navigation -->
+        <div class="flex flex-wrap gap-2 mb-8 border-b border-slate-800 pb-4 no-print">
+            <button onclick="switchTab('pass')" id="btn-tab-pass" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-id-card"></i> البطاقة الرئيسية
+            </button>
+            <button onclick="switchTab('stats')" id="btn-tab-stats" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition bg-slate-800/80 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-chart-radar"></i> إحصائيات الأداء
+            </button>
+            <button onclick="switchTab('fights')" id="btn-tab-fights" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition bg-slate-800/80 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-trophy"></i> سجل النزالات
+            </button>
+            <button onclick="switchTab('medical')" id="btn-tab-medical" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition bg-slate-800/80 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-file-medical"></i> الفحص الطبي والترخيص
+            </button>
+        </div>
+
+        <!-- TAB 1: PASS BADGE -->
+        <div id="tab-pass" class="tab-content block">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- ID Badge Box Area -->
+                <div class="lg:col-span-7 flex justify-center">
+                    
+                    <!-- THE BADGE CARD CONTAINER -->
+                    <div id="printable-pass" class="badge-card w-full max-w-md rounded-2xl border-4 border-amber-400/80 p-6 shadow-2xl relative transition-all">
+                        
+                        <!-- Lanyard Hole Slot Clip -->
+                        <div class="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-3 bg-slate-900 rounded-full border border-slate-700 flex items-center justify-center">
+                            <div class="w-10 h-1 bg-slate-700 rounded"></div>
+                        </div>
+
+                        <!-- Card Header -->
+                        <div class="mt-3 flex items-center justify-between border-b-2 border-slate-900 pb-3">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-mitten text-3xl text-slate-900"></i>
+                                <div>
+                                    <h2 class="text-xl font-black tracking-tight text-slate-900 uppercase">بطاقة دخول ملاكم محترف</h2>
+                                    <p class="text-[10px] font-bold text-slate-600 tracking-wider">PRO BOXING ATHLETE ACCREDITATION</p>
+                                </div>
+                            </div>
+                            <!-- Organization Logo Placeholder -->
+                            <div class="text-center">
+                                <div class="bg-amber-500 text-slate-950 font-black text-xs px-2 py-0.5 rounded border border-slate-900">
+                                    WBC
+                                </div>
+                                <span class="text-[9px] font-bold text-slate-700 block mt-0.5">OFFICIAL</span>
+                            </div>
+                        </div>
+
+                        <!-- Main Content: Photo & Key Info -->
+                        <div class="mt-5 grid grid-cols-12 gap-4 items-center">
+                            
+                            <!-- Athlete Photo Block -->
+                            <div class="col-span-5 flex flex-col items-center">
+                                <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden border-2 border-slate-900 shadow-md bg-slate-200">
+                                    <img id="athlete-photo" src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&q=80&w=600" alt="أيمن حسينية" class="w-full h-full object-cover object-center">
+                                    <!-- Verified Badge -->
+                                    <div class="absolute bottom-1 right-1 bg-amber-500 text-slate-950 text-xs w-5 h-5 rounded-full flex items-center justify-center border border-white font-bold" title="ملاكم موثق">
+                                        ✓
+                                    </div>
+                                </div>
+                                <label for="photo-upload" class="mt-2 text-[10px] font-bold text-amber-700 underline cursor-pointer hover:text-amber-900 no-print">
+                                    <i class="fa-solid fa-camera"></i> تغيير الصورة
+                                </label>
+                                <input type="file" id="photo-upload" accept="image/*" class="hidden" onchange="previewPhoto(event)">
+                            </div>
+
+                            <!-- Athlete Details Table -->
+                            <div class="col-span-7 space-y-1.5 text-slate-900">
+                                <div class="border-b border-slate-300 pb-1">
+                                    <span class="text-[10px] font-bold text-slate-500 block">الاسم الكامل:</span>
+                                    <span class="text-base font-extrabold text-slate-950">أيمن حسينية</span>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-1 border-b border-slate-300 pb-1">
+                                    <div>
+                                        <span class="text-[10px] font-bold text-slate-500 block">اسم الملاكم:</span>
+                                        <span class="text-xs font-bold text-amber-700">Aymen 'Hassynia'</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] font-bold text-slate-500 block">العمر / الميلاد:</span>
+                                        <span class="text-xs font-bold">17 سنة (2009)</span>
+                                    </div>
+                                </div>
+
+                                <div class="border-b border-slate-300 pb-1">
+                                    <span class="text-[10px] font-bold text-slate-500 block">وضعية القتال:</span>
+                                    <span class="text-xs font-bold">يميني (Orthodox)</span>
+                                </div>
+
+                                <div class="border-b border-slate-300 pb-1">
+                                    <span class="text-[10px] font-bold text-slate-500 block">أسلوب اللعب:</span>
+                                    <span class="text-xs font-bold">ملاكم مضاد / ملاكم خارجي</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-1">
+                                    <div>
+                                        <span class="text-[10px] font-bold text-slate-500 block">الفئة الوزنية:</span>
+                                        <span class="text-xs font-extrabold text-slate-900">64 كغ (فوق الخفيف)</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] font-bold text-slate-500 block">الطول:</span>
+                                        <span class="text-xs font-extrabold text-slate-900">1.90 م</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Stats Summary Bar -->
+                        <div class="mt-4 bg-slate-900 text-white p-2.5 rounded-xl grid grid-cols-3 gap-2 text-center border border-slate-800">
+                            <div>
+                                <span class="text-[9px] text-amber-400 block font-bold">الضربة القاضية</span>
+                                <span class="text-xs font-black">86 %</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-amber-400 block font-bold">السرعة والرشاقة</span>
+                                <span class="text-xs font-black">95 %</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-amber-400 block font-bold">ذكاء الحلبة</span>
+                                <span class="text-xs font-black">94 %</span>
+                            </div>
+                        </div>
+
+                        <!-- License & Interactive QR Code Footer -->
+                        <div class="mt-4 pt-3 border-t-2 border-slate-900 flex items-center justify-between gap-3">
+                            <div class="space-y-0.5 text-right">
+                                <p class="text-[10px] font-black text-slate-800">رقم الترخيص: <span class="font-mono text-xs text-amber-700">A24-HB-001</span></p>
+                                <p class="text-[9px] text-slate-600 font-bold">صالح لغاية: 2026/05/10</p>
+                                <!-- Barcode visual simulation -->
+                                <div class="mt-1 flex gap-0.5 h-6 items-center opacity-80">
+                                    <div class="w-1 h-full bg-slate-900"></div>
+                                    <div class="w-0.5 h-full bg-slate-900"></div>
+                                    <div class="w-2 h-full bg-slate-900"></div>
+                                    <div class="w-1 h-full bg-slate-900"></div>
+                                    <div class="w-3 h-full bg-slate-900"></div>
+                                    <div class="w-0.5 h-full bg-slate-900"></div>
+                                    <div class="w-1.5 h-full bg-slate-900"></div>
+                                    <div class="w-1 h-full bg-slate-900"></div>
+                                    <div class="w-2 h-full bg-slate-900"></div>
+                                </div>
+                            </div>
+
+                            <!-- QR Code Box -->
+                            <div class="flex flex-col items-center">
+                                <div id="qrcode-container" class="bg-white p-1 rounded-lg border border-slate-400 shadow-sm"></div>
+                                <span class="text-[8px] font-extrabold text-slate-700 mt-0.5">امسح للتحقق</span>
+                            </div>
+                        </div>
+
+                        <!-- Holographic Watermark -->
+                        <div class="absolute bottom-2 left-2 w-10 h-10 rounded-full holo-seal pointer-events-none flex items-center justify-center opacity-40">
+                            <i class="fa-solid fa-shield-halved text-amber-900 text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side Panel Tools & Dynamic Links -->
+                <div class="lg:col-span-5 space-y-6 no-print">
+                    
+                    <!-- Quick Actions Card -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur">
+                        <h3 class="text-base font-bold text-amber-400 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders"></i> إدوات التحكم بالبطاقة
+                        </h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="window.print()" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-print text-amber-400"></i> طباعة البطاقة
+                            </button>
+                            <button onclick="copyProfileLink()" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-share-nodes text-amber-400"></i> نسخ رابط البطاقة
+                            </button>
+                            <button onclick="downloadQRCode()" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-download text-amber-400"></i> تنزيل رمز QR
+                            </button>
+                            <button onclick="openFullscreenCard()" class="p-3 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-xl text-xs font-bold text-amber-300 flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-expand text-amber-400"></i> عرض شاشة كاملة
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Interactive QR Encoder & Verification Tester -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur space-y-4">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-qrcode text-amber-400"></i> إعدادات رمز الاستجابة السريعة (QR)
+                        </h3>
+                        <p class="text-xs text-slate-400">
+                            عند مسح كود QR عبر أي هاتف، سيتم توجيه المفتش أو الحكم فوراً لرابط هذا الملف الشخصي للتحقق من هوية وسجلات الملاكم.
+                        </p>
+                        
+                        <div>
+                            <label class="text-xs font-bold text-slate-300 block mb-1">الرابط المضمّن بالكود:</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="qr-input-url" class="bg-slate-950 border border-slate-700 text-xs text-amber-400 rounded-xl px-3 py-2 w-full focus:outline-none focus:border-amber-500" readonly>
+                                <button onclick="regenerateQR()" class="px-3 py-2 bg-amber-500 text-slate-950 font-bold rounded-xl text-xs hover:bg-amber-400 transition">
+                                    تحديث
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Verification Alert Simulator -->
+                        <div class="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl flex items-center gap-3">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-xl"></i>
+                            <div>
+                                <h4 class="text-xs font-bold text-emerald-300">نظام التحقق الآلي متصل</h4>
+                                <p class="text-[11px] text-slate-400">تم التوثيق الرقمي بواسطة سيرفرات WBC الدولية.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: PERFORMANCE STATS -->
+        <div id="tab-stats" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-amber-400"></i> تقييم القدرات الفنية والتكتيكية
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">مؤشرات الأداء الرياضي لـ **أيمن حسينية** بناءً على آخر تقرير مدربين</p>
+                    </div>
+                    <span class="px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-black rounded-full">
+                        المعدل العام: 91 / 100
+                    </span>
+                </div>
+
+                <!-- Animated Skill Bars -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Striking -->
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-white"><i class="fa-solid fa-hand-fist text-amber-400 ml-2"></i> قوة التسديد والدقة (Striking)</span>
+                            <span class="text-sm font-black text-amber-400">90%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-600 to-yellow-400 h-full rounded-full transition-all duration-1000" style="width: 90%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Punch Power -->
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-white"><i class="fa-solid fa-bolt text-amber-400 ml-2"></i> قوة اللكمات (Punch Power)</span>
+                            <span class="text-sm font-black text-amber-400">86%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-600 to-yellow-400 h-full rounded-full transition-all duration-1000" style="width: 86%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Speed & Agility -->
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-white"><i class="fa-solid fa-person-running text-amber-400 ml-2"></i> السرعة والرشاقة (Speed & Agility)</span>
+                            <span class="text-sm font-black text-amber-400">95%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-600 to-yellow-400 h-full rounded-full transition-all duration-1000" style="width: 95%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Defense -->
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-white"><i class="fa-solid fa-shield-halved text-amber-400 ml-2"></i> الدفاع والتفادي (Defense)</span>
+                            <span class="text-sm font-black text-amber-400">93%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-600 to-yellow-400 h-full rounded-full transition-all duration-1000" style="width: 93%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Endurance -->
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-white"><i class="fa-solid fa-heart-pulse text-amber-400 ml-2"></i> التحمل والياقة (Endurance / Cardio)</span>
+                            <span class="text-sm font-black text-amber-400">88%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-600 to-yellow-400 h-full rounded-full transition-all duration-1000" style="width: 88%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Fight IQ -->
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-white"><i class="fa-solid fa-brain text-amber-400 ml-2"></i> ذكاء الحلبة والتكتيك (Fight IQ)</span>
+                            <span class="text-sm font-black text-amber-400">94%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-600 to-yellow-400 h-full rounded-full transition-all duration-1000" style="width: 94%"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: FIGHT RECORD -->
+        <div id="tab-fights" class="tab-content hidden space-y-6">
+            
+            <!-- Summary Header Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center">
+                    <span class="text-xs text-slate-400 font-bold block">إجمالي النزالات</span>
+                    <span class="text-2xl font-black text-white">12</span>
+                </div>
+                <div class="bg-slate-900 border border-emerald-500/30 p-4 rounded-2xl text-center">
+                    <span class="text-xs text-emerald-400 font-bold block">انتصارات (Wins)</span>
+                    <span class="text-2xl font-black text-emerald-400">12</span>
+                </div>
+                <div class="bg-slate-900 border border-amber-500/30 p-4 rounded-2xl text-center">
+                    <span class="text-xs text-amber-400 font-bold block">ضربة قاضية (KO)</span>
+                    <span class="text-2xl font-black text-amber-400">8</span>
+                </div>
+                <div class="bg-slate-900 border border-rose-500/30 p-4 rounded-2xl text-center">
+                    <span class="text-xs text-rose-400 font-bold block">هزائم (Losses)</span>
+                    <span class="text-2xl font-black text-rose-400">0</span>
+                </div>
+            </div>
+
+            <!-- Fights Table -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur">
+                <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+                    <h3 class="font-bold text-white">سجل المواجهات الأخيرة</h3>
+                    <span class="text-xs text-amber-400 font-bold">سجل غير مهزوم (Undefeated)</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-slate-950 text-slate-400 uppercase font-bold border-b border-slate-800">
+                            <tr>
+                                <th class="p-3.5">الخصم</th>
+                                <th class="p-3.5">النتيجة</th>
+                                <th class="p-3.5">الطريقة</th>
+                                <th class="p-3.5">الجولة</th>
+                                <th class="p-3.5">التاريخ</th>
+                                <th class="p-3.5">الحدث / البططولة</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/60 font-medium">
+                            <tr class="hover:bg-slate-800/40 transition">
+                                <td class="p-3.5 text-white font-bold">كريم مرابط</td>
+                                <td class="p-3.5"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-md font-bold">فوز</span></td>
+                                <td class="p-3.5">ضربة قاضية (KO)</td>
+                                <td class="p-3.5">2 / 3</td>
+                                <td class="p-3.5">2024/02/18</td>
+                                <td class="p-3.5 text-slate-400">بطولة الملاكمة الإقليمية</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition">
+                                <td class="p-3.5 text-white font-bold">طارق بن سعيد</td>
+                                <td class="p-3.5"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-md font-bold">فوز</span></td>
+                                <td class="p-3.5">إجماع الحكام (UD)</td>
+                                <td class="p-3.5">3 / 3</td>
+                                <td class="p-3.5">2023/11/05</td>
+                                <td class="p-3.5 text-slate-400">كأس الشرف للمحترفين</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition">
+                                <td class="p-3.5 text-white font-bold">يوسف براهيمي</td>
+                                <td class="p-3.5"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-md font-bold">فوز</span></td>
+                                <td class="p-3.5">ضربة قاضية فنية (TKO)</td>
+                                <td class="p-3.5">1 / 3</td>
+                                <td class="p-3.5">2023/08/12</td>
+                                <td class="p-3.5 text-slate-400">التصفيات الوطنية للملاكمة</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: MEDICAL & LICENSING -->
+        <div id="tab-medical" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-notes-medical text-amber-400"></i> حالة الفحوصات الطبية والترخيص
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-heart-pulse text-emerald-400 text-xl"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">فحص القلب والأوعية الدموية</h4>
+                                <p class="text-xs text-slate-400">تم الإجراء: 2024/04/10</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">سليم (Passed)</span>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-brain text-emerald-400 text-xl"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">فحص الرنين المغناطيسي للدماغ (MRI)</h4>
+                                <p class="text-xs text-slate-400">تم الإجراء: 2024/04/12</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">سليم (Cleared)</span>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-vial text-emerald-400 text-xl"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">تحاليل الدم الشاملة والمنشطات</h4>
+                                <p class="text-xs text-slate-400">تم الإجراء: 2024/05/01</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">سليم (Negative)</span>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-eye text-emerald-400 text-xl"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">فحص نظر وقاع العين</h4>
+                                <p class="text-xs text-slate-400">تم الإجراء: 2024/04/15</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">سليم (6/6)</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-bold text-amber-300">ختم اللجان الطبية المعتمدة</h4>
+                        <p class="text-xs text-slate-400">الملاكم لائق تماماً لخوض نزالات الملاكمة المحترفة تحت مظلة WBC.</p>
+                    </div>
+                    <i class="fa-solid fa-certificate text-amber-400 text-3xl"></i>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Alert Notification -->
+    <div id="toast" class="fixed bottom-5 left-5 bg-amber-500 text-slate-950 font-extrabold px-5 py-3 rounded-xl shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-info"></i>
+        <span id="toast-message">تم نسخ الرابط بنجاح!</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let qrCodeObj = null;
+
+        // Initialize App on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentUrl = window.location.href;
+            document.getElementById('qr-input-url').value = currentUrl;
+            generateQRCode(currentUrl);
+        });
+
+        function generateQRCode(text) {
+            const container = document.getElementById('qrcode-container');
+            container.innerHTML = ''; // clear
+            
+            try {
+                qrCodeObj = new QRCode(container, {
+                    text: text,
+                    width: 76,
+                    height: 76,
+                    colorDark : "#0d1117",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            } catch (e) {
+                // Fallback to QR API if CDN fails
+                container.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(text)}" class="w-20 h-20 rounded" alt="QR Code">`;
+            }
+        }
+
+        function regenerateQR() {
+            const url = document.getElementById('qr-input-url').value;
+            generateQRCode(url);
+            showToast('تم تحديث رمز QR بنجاح!');
+        }
+
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+
+            // Show selected tab
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('block');
+
+            // Reset tab buttons styling
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition bg-slate-800/80 text-slate-300 hover:bg-slate-700";
+            });
+
+            // Activate current button
+            const activeBtn = document.getElementById(`btn-tab-${tabId}`);
+            activeBtn.className = "tab-btn px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-lg shadow-amber-500/20";
+        }
+
+        function previewPhoto(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('athlete-photo');
+                output.src = reader.result;
+                showToast('تم تغيير صورة الملاكم بنجاح!');
+            };
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        function copyProfileLink() {
+            const url = window.location.href;
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = url;
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('تم نسخ رابط البطاقة إلى الحافظة!');
+        }
+
+        function downloadQRCode() {
+            const qrImg = document.querySelector('#qrcode-container img');
+            const qrCanvas = document.querySelector('#qrcode-container canvas');
+            let imageSrc = null;
+
+            if (qrCanvas) {
+                imageSrc = qrCanvas.toDataURL("image/png");
+            } else if (qrImg) {
+                imageSrc = qrImg.src;
+            }
+
+            if (imageSrc) {
+                const link = document.createElement('a');
+                link.href = imageSrc;
+                link.download = 'Aymen_Hassynia_Boxing_Pass_QR.png';
+                link.click();
+                showToast('جارٍ تحميل رمز QR...');
+            } else {
+                showToast('تعذر استخراج صورة الرمز');
+            }
+        }
+
+        function openFullscreenCard() {
+            const passCard = document.getElementById('printable-pass');
+            if (passCard.requestFullscreen) {
+                passCard.requestFullscreen();
+            } else if (passCard.webkitRequestFullscreen) {
+                passCard.webkitRequestFullscreen();
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+```
